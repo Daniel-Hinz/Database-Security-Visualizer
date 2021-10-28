@@ -1,0 +1,14 @@
+:root {
+    --white-1: #ffffff;
+    --white-2: #f0f4ef;
+    --gray-1: #bfcc94;
+    --black-1: #0d1821;
+    --blue-1: #344966;
+    --blue-2: #b4cded; 
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: Open Sans;
+}
