@@ -82,4 +82,14 @@ i {
 .button {
     padding: 5px 20px;
     margin-top: 20px;
+    background: none;
+    border: 2px solid var(--blue-1);
+    color: var(--blue-1);
+    transition: .2s;
+}
+
+.button:hover {
+    padding: 5px 17.5px;
+    background: var(--blue-1);
+    color: white;
 }

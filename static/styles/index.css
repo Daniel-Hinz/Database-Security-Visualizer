@@ -95,7 +95,7 @@ form {
 .button:hover {
     background: var(--blue-1);
     color: var(--white-1);
-    padding: 4px 25px;
+    padding: 5px 25px;
 }
 
 p {

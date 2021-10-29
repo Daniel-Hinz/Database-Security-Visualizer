@@ -1,18 +1,25 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
+
 app = Flask(__name__)
 
 
 ###############################################
 ## Default Route
-@app.route("/")
-def main():
+@app.route("/", methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        return redirect(url_for('home'))
+        
     return render_template('index.html')
 
 
 ###############################################
 ## Signup Route
-@app.route("/signup")
+@app.route("/signup", methods = ['GET', 'POST'])
 def signup():
+    if request.method == 'POST':
+        return redirect(url_for('login'))
+
     return render_template('signup.html')
 
 
