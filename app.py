@@ -3,18 +3,25 @@ app = Flask(__name__)
 
 
 ###############################################
-## Routes
+## Default Route
 @app.route("/")
 def main():
     return render_template('index.html')
 
+
+###############################################
+## Signup Route
 @app.route("/signup")
 def signup():
     return render_template('signup.html')
 
+
+###############################################
+## Home Route
 @app.route("/home")
 def home():
     return render_template('home.html')
+
 
 ###############################################
 ## General

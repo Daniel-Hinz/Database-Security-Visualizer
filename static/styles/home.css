@@ -12,3 +12,34 @@
     margin: 0;
     font-family: Open Sans;
 }
+
+body {
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+nav {
+    background: var(--black-1);
+    height: 60px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    border-bottom: 5px solid var(--blue-2);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+nav ul {
+    padding-left: 10px;
+    list-style: none;
+}
+
+nav ul li {
+    color: var(--white-1);
+    font-size: 25px;
+}

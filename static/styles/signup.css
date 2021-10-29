@@ -12,3 +12,74 @@
     margin: 0;
     font-family: Open Sans;
 }
+
+body {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+nav {
+    background: var(--black-1);
+    height: 60px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    border-bottom: 5px solid var(--blue-2);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+nav ul {
+    padding-left: 10px;
+    list-style: none;
+}
+
+nav ul li {
+    color: var(--white-1);
+    font-size: 25px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    color: var(--blue-1);
+    border-bottom: 1px solid var(--blue-1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.input-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--blue-1);
+}
+
+i {   
+    align-items: center;
+    color: var(--blue-1);
+}
+
+.text, .text:focus {
+    outline: none;
+    padding: 5px 10px;
+    width: 225px;
+    margin: 10px;
+    border: 0;
+    border-bottom: 1px solid var(--blue-1);
+}
+
+.button {
+    padding: 5px 20px;
+    margin-top: 20px;
+}
