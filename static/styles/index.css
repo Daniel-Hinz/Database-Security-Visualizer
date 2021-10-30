@@ -1,18 +1,17 @@
-/* General Styles */
-
 :root {
     --white-1: #ffffff;
     --white-2: #f0f4ef;
     --gray-1: #bfcc94;
     --black-1: #0d1821;
     --blue-1: #344966;
-    --blue-2: #b4cded;   
+    --blue-2: #b4cded; 
 }
 
 * {
     padding: 0;
     margin: 0;
-    font-family: Open Sans;
+    font-family: Open Sans, sans-serif;
+    overflow: hidden;
 }
 
 body {
@@ -46,70 +45,69 @@ nav ul li {
     font-size: 25px;
 }
 
-form {
+.hamburger {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    overflow: auto;
-}
-
-.fa-user {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;    
-    color: var(--white-1);
-    font-size: 175px;
-    background: var(--blue-2);
-    height: 275px;
-    width: 275px;
-    border-radius: 50%;
-    margin: 25px;
-}
-
-.text {
-    margin: 5px;
-    padding: 5px 10px;
-    width: 200px;
-}
-
-.text, .text:focus {
-    outline: 0;
-    border: 0;
-    border-bottom: 2px solid var(--blue-1);
-}
-
-.button {
-    padding: 5px 30px;
-    margin-top: 20px;
-    float: right;
-    background: none;
-    border: 3px solid var(--blue-1);
-    text-transform: uppercase;
-    color: var(--blue-1);
     cursor: pointer;
-    transition: .2s;
-}
-
-.button:hover {
-    background: var(--blue-1);
-    color: var(--white-1);
-    padding: 5px 25px;
-}
-
-p {
     position: absolute;
-    bottom: 50px;
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%);
 }
 
-p a {
-    color: var(--blue-1);
+.hamburger-line {
+    background: white;
+    height: 4px;
+    width: 37.5px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+.links {
+    height: 100%;
+    width: 350px;
+    position: absolute;
+    right: -350px;
+    transition: .2s;
+    background: var(--white-1);
+}
+
+.link {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 30px;
+    padding: 10px 40px;
+    height: 40px;
+}
+
+.link a {
+    color: var(--black-1);
     text-decoration: none;
 }
 
-p a:hover {
+.link a:hover {
     text-decoration: underline;
 }
 
+.close {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center; 
+    margin-top: 20px;
+    font-size: 30px;
+    padding: 10px 40px;
+    height: 40px;
+}
 
+.fa-times {
+    cursor: pointer;
+    height: 40px;
+}
+
+.move {
+    transform: translateX(-350px);
+    box-shadow: 0 0 0 10000px rgb(0 0 0 / 30%);
+}

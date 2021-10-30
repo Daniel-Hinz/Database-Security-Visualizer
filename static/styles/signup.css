@@ -44,6 +44,19 @@ nav ul li {
     font-size: 25px;
 }
 
+.back {
+    position: absolute;
+    top: 90px;
+    left: 30px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--blue-1);
+}
+
+.back:hover {
+    text-decoration: underline;
+}
+
 form {
     display: flex;
     flex-direction: column;

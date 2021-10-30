@@ -1,16 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
 
 
 ###############################################
-## Default Route
-@app.route("/", methods = ['GET', 'POST'])
+## Login Route
+@app.route("/login", methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
         return redirect(url_for('home'))
         
-    return render_template('index.html')
+    return render_template('login.html')
 
 
 ###############################################
@@ -24,10 +24,10 @@ def signup():
 
 
 ###############################################
-## Home Route
-@app.route("/home")
+## Default Route
+@app.route("/")
 def home():
-    return render_template('home.html')
+    return render_template('index.html')
 
 
 ###############################################
