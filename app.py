@@ -16,20 +16,24 @@ db = SQLAlchemy(app)
 
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key = True)
+    first_last_name = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(200), nullable = False)
     email = db.Column(db.String(200), nullable = False)
     address = db.Column(db.String(200), nullable = False)
     age = db.Column(db.Integer, nullable = False)
-    job= db.Column(db.String(200), nullable = False)
+    job_title= db.Column(db.String(200), nullable = False)
+    salary= db.Column(db.Integer, nullable = False)
     password = db.Column(db.String(200),nullable = False)
     date_created = db.Column(db.DateTime, default = datetime.utcnow)
 
-    def __init__(self,username,email,address,age,job,password):
+    def __init__(self,first_last_name,username,email,address,age,job_title,salary,password):
+        self.first_last_name = first_last_name
         self.username = username
         self.email = email
         self.address = address
         self.age = age
-        self.job = job
+        self.job_title = job_title
+        self.salary = salary
         self.password = password
             
 # Function to return string when new data is added
@@ -63,14 +67,16 @@ def login():
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        new_first_last_name = request.form['first_last_name']
         new_username = request.form['username']
         new_email = request.form['email']
         new_address = request.form['address']
         new_age = request.form['age']
-        new_job = request.form['job']
+        new_job_title = request.form['job_title']
+        new_salary = request.form['salary']
         new_password = request.form['password']
 
-        user = Person(new_username,new_email,new_address,new_age,new_job,new_password)
+        user = Person(new_first_last_name,new_username,new_email,new_address,new_age,new_job_title, new_salary,new_password)
         db.session.add(user)
         db.session.commit()
         
