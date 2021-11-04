@@ -1,42 +1,45 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-import sqlalchemy as db
 from sqlalchemy.sql import select, exists
+from sqlalchemy.sql.expression import false, true
 from datetime import datetime
 
-from sqlalchemy.sql.expression import false, true
+import sqlalchemy as db
+import sqlite3
+
+from werkzeug.datastructures import Headers
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
 
+db = SQLAlchemy(app)
+Session(app)
 
 ###############################################
 ## Database Initialization
-db = SQLAlchemy(app)
 
 class Person(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    first_last_name = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(200), nullable = False)
-    email = db.Column(db.String(200), nullable = False)
-    address = db.Column(db.String(200), nullable = False)
-    age = db.Column(db.Integer, nullable = False)
-    job_title= db.Column(db.String(200), nullable = False)
-    salary= db.Column(db.Integer, nullable = False)
-    password = db.Column(db.String(200),nullable = False)
-    date_created = db.Column(db.DateTime, default = datetime.utcnow)
+    id           = db.Column(db.Integer, primary_key = True)
+    username     = db.Column(db.String(200), nullable = False)
+    email        = db.Column(db.String(200), nullable = False)
+    address      = db.Column(db.String(200), nullable = False)
+    age          = db.Column(db.Integer, nullable = False)
+    job          = db.Column(db.String(200), nullable = False)
+    password     = db.Column(db.String(200),nullable = False)
+    date_created = db.Column(db.DateTime, default = datetime.utcnow)    
 
-    def __init__(self,first_last_name,username,email,address,age,job_title,salary,password):
-        self.first_last_name = first_last_name
+    def __init__(self,username,email,address,age,job,password):
         self.username = username
-        self.email = email
-        self.address = address
-        self.age = age
-        self.job_title = job_title
-        self.salary = salary
+        self.email    = email
+        self.address  = address
+        self.age      = age
+        self.job      = job
         self.password = password
             
-# Function to return string when new data is added
+    # Function to return string when new data is added
     def __repr__(self):
         return '<name %r>' % self.id  
 
@@ -46,6 +49,9 @@ class Person(db.Model):
 @app.route("/login", methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        
+        session["name"] = request.form.get("username")
+
         username = request.form['username']
         password = request.form['password']
 
@@ -67,16 +73,14 @@ def login():
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        new_first_last_name = request.form['first_last_name']
         new_username = request.form['username']
-        new_email = request.form['email']
-        new_address = request.form['address']
-        new_age = request.form['age']
-        new_job_title = request.form['job_title']
-        new_salary = request.form['salary']
+        new_email    = request.form['email']
+        new_address  = request.form['address']
+        new_age      = request.form['age']
+        new_job      = request.form['job']
         new_password = request.form['password']
 
-        user = Person(new_first_last_name,new_username,new_email,new_address,new_age,new_job_title, new_salary,new_password)
+        user = Person(new_username,new_email,new_address,new_age,new_job,new_password)
         db.session.add(user)
         db.session.commit()
         
@@ -86,9 +90,20 @@ def signup():
 
 
 ###############################################
+## Signout Route
+@app.route("/signout", methods = ['GET', 'POST'])
+def signout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
+###############################################
 ## Default Route
 @app.route("/")
 def home():
+    if not session.get("name"):
+        return redirect(url_for("login"))
+    
     return render_template('index.html')
 
 

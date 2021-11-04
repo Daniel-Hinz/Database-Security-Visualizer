@@ -111,3 +111,18 @@ nav ul li {
     transform: translateX(-350px);
     box-shadow: 0 0 0 10000px rgb(0 0 0 / 30%);
 }
+
+th {
+    color: var(--white-1);
+    background: var(--blue-1);
+}
+
+tr:nth-child(even) {
+    background: var(--white-2);
+}
+
+td, th {
+    margin: 0;
+    padding: 0 20px;
+    height: 40px;
+}

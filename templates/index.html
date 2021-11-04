@@ -41,7 +41,25 @@
       <div class="link"><a href="#">Home</a></div>
       <div class="link"><a href="#">About</a></div>
       <div class="link"><a href="#">View Table</a></div>
-      <div class="link"><a href="/login">Sign Out</a></div>
+      <div class="link"><a href="/signout">Sign Out</a></div>
+    </div>
+
+    <div class="main">
+      <table>
+        <tr>
+          {% for header in headings %} 
+            <th> {{ header }} </th>          
+          {% endfor %}
+        </tr>
+
+        {% for row in data %}
+          <tr>
+            {% for cell in row %}
+              <td> {{ row }} </td>
+            {% endfor %}
+          <tr>
+        {% endfor %}
+      </table>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
