@@ -5,6 +5,8 @@
     --black-1: #0d1821;
     --blue-1: #344966;
     --blue-2: #b4cded;
+    --red-1: #ba4946;  
+    --red-2: #f7dfdf;
 }
 
 * {
@@ -99,10 +101,20 @@ i {
     border: 2px solid var(--blue-1);
     color: var(--blue-1);
     transition: .2s;
+    cursor: pointer;
 }
 
 .button:hover {
     padding: 5px 17.5px;
     background: var(--blue-1);
     color: white;
+}
+
+.error {
+    outline: 1px solid var(--red-1);
+    background: var(--red-2);
+    color: var(--red-1);
+    padding: 10px;
+    width: 250px;
+    border-radius: 5px;
 }

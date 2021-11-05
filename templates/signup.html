@@ -36,11 +36,23 @@
 
     <form action="/signup" method="POST">
       <h1>Sign Up Here</h1>
-      
+
+      {% if error == false %}
+      <div class="error" style="margin-bottom: 10px;">
+        Please fill in a value for all fields.
+      </div>
+      {% endif %}
+
       <div class="input-wrapper">
         <i class="fas fa-user"></i>
         <input type="text" placeholder="Username" name="username" class="text">
       </div>
+
+      {% if duplicate == true %}
+      <div class="error">
+        This username is taken, please try another.
+      </div>
+      {% endif %}
 
       <div class="input-wrapper">
         <i class="fas fa-envelope"></i>

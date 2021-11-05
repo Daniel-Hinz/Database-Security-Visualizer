@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+from flask import Flask, render_template, request, redirect, url_for, session, app
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select, exists
@@ -6,9 +6,6 @@ from sqlalchemy.sql.expression import false, true
 from datetime import datetime
 
 import sqlalchemy as db
-import sqlite3
-
-from werkzeug.datastructures import Headers
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -63,7 +60,7 @@ def login():
         if exists == true:
             return redirect(url_for('home'))
         else:
-            return redirect(url_for('login'))
+            return render_template('login.html', loginFailed = true)
         
     return render_template('login.html')
 
@@ -80,10 +77,19 @@ def signup():
         new_job      = request.form['job']
         new_password = request.form['password']
 
+        # Check all fields are filled out
+        if (not new_username or not new_email or not new_address or
+            not new_age      or not new_job   or not new_password):
+            return render_template('signup.html', error = False)
+
+        # Check if username already exists
+        if db.session.query(db.exists().where(Person.username == new_username)).scalar():
+            return render_template('signup.html', duplicate = True)
+
         user = Person(new_username,new_email,new_address,new_age,new_job,new_password)
         db.session.add(user)
         db.session.commit()
-        
+
         return redirect(url_for('login'))
 
     return render_template('signup.html')
@@ -104,7 +110,9 @@ def home():
     if not session.get("name"):
         return redirect(url_for("login"))
     
-    return render_template('index.html')
+    return render_template('index.html', 
+                            headings = Person.__table__.columns.keys(), 
+                            people = Person.query.all())
 
 
 ###############################################

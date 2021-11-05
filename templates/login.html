@@ -32,6 +32,12 @@
     <form action="/login" method="POST">
       <i class="fas fa-user"></i> 
 
+      {% if loginFailed %}
+        <div class="failed">
+          Invalid username or password
+        </div>
+      {% endif %}
+
       <input type="text" placeholder="Username" name="username" class="text">      
       <input type="password" placeholder="Password" name="password" id="password" class="text"> 
       <div class="show-password-wrapper">

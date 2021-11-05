@@ -38,25 +38,30 @@
 
     <div class="links">
       <div class="close"><i class="fas fa-times"></i></div>
-      <div class="link"><a href="#">Home</a></div>
+      <div class="link"><a href="/">Home</a></div>
       <div class="link"><a href="#">About</a></div>
       <div class="link"><a href="#">View Table</a></div>
       <div class="link"><a href="/signout">Sign Out</a></div>
     </div>
 
     <div class="main">
-      <table>
+      <table style="overflow-x: visable;">
         <tr>
           {% for header in headings %} 
-            <th> {{ header }} </th>          
+            <th>{{ header }}</th>          
           {% endfor %}
         </tr>
 
-        {% for row in data %}
+        {% for person in people %}
           <tr>
-            {% for cell in row %}
-              <td> {{ row }} </td>
-            {% endfor %}
+              <td>{{ person.id }}</td>
+              <td>{{ person.username }}</td>
+              <td>{{ person.email }}</td>
+              <td>{{ person.address }}</td>
+              <td>{{ person.age }}</td>
+              <td>{{ person.job }}</td>
+              <td>{{ person.password }}</td>
+              <td>{{ person.date_created }}</td>
           <tr>
         {% endfor %}
       </table>
