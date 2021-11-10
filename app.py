@@ -20,21 +20,23 @@ Session(app)
 
 class Person(db.Model):
     id           = db.Column(db.Integer, primary_key = True)
+    fullname     = db.Column(db.String(200), nullable = False)
     username     = db.Column(db.String(200), nullable = False)
-    email        = db.Column(db.String(200), nullable = False)
     address      = db.Column(db.String(200), nullable = False)
     age          = db.Column(db.Integer, nullable = False)
-    job          = db.Column(db.String(200), nullable = False)
+    salary       = db.Column(db.Integer, nullable = False)
+    job_title    = db.Column(db.String(200), nullable = False)
     password     = db.Column(db.String(200),nullable = False)
     date_created = db.Column(db.DateTime, default = datetime.utcnow)    
 
-    def __init__(self,username,email,address,age,job,password):
-        self.username = username
-        self.email    = email
-        self.address  = address
-        self.age      = age
-        self.job      = job
-        self.password = password
+    def __init__(self,fullname,username,email,address,age,job,password):
+        self.username   = fullname
+        self.username   = username
+        self.address    = address
+        self.age        = age
+        self.salary     = salary
+        self.job_title  = job_title
+        self.password   = password
             
     # Function to return string when new data is added
     def __repr__(self):
@@ -70,16 +72,17 @@ def login():
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        new_username = request.form['username']
-        new_email    = request.form['email']
-        new_address  = request.form['address']
-        new_age      = request.form['age']
-        new_job      = request.form['job']
-        new_password = request.form['password']
+        new_fullname    = request.form['fullname']
+        new_username    = request.form['username']
+        new_address     = request.form['address']
+        new_age         = request.form['age']
+        new_salary      = request.form['salary']
+        new_job_title   = request.form['job_title']
+        new_password    = request.form['password']
 
         # Check all fields are filled out
-        if (not new_username or not new_email or not new_address or
-            not new_age      or not new_job   or not new_password):
+        if (not fullname    or not new_username  or not new_address   or not new_age
+            or not salary   or not new_job_title or not new_password):
             return render_template('signup.html', error = False)
 
         # Check if username already exists
