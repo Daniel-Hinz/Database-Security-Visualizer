@@ -8,6 +8,7 @@ from datetime import datetime
 import sqlalchemy as db
 
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -23,14 +24,14 @@ class Person(db.Model):
     fullname     = db.Column(db.String(200), nullable = False)
     username     = db.Column(db.String(200), nullable = False)
     address      = db.Column(db.String(200), nullable = False)
-    age          = db.Column(db.Integer, nullable = False)
-    salary       = db.Column(db.Integer, nullable = False)
+    age          = db.Column(db.Integer)
+    salary       = db.Column(db.Integer)
     job_title    = db.Column(db.String(200), nullable = False)
     password     = db.Column(db.String(200),nullable = False)
     date_created = db.Column(db.DateTime, default = datetime.utcnow)    
 
-    def __init__(self,fullname,username,email,address,age,job,password):
-        self.username   = fullname
+    def __init__(self,fullname,username,address,age,salary,job_title,password):
+        self.fullname   = fullname
         self.username   = username
         self.address    = address
         self.age        = age
@@ -81,15 +82,15 @@ def signup():
         new_password    = request.form['password']
 
         # Check all fields are filled out
-        if (not fullname    or not new_username  or not new_address   or not new_age
-            or not salary   or not new_job_title or not new_password):
+        if (not new_fullname  or not new_username  or not new_address   or not new_age
+            or not new_salary or not new_job_title or not new_password):
             return render_template('signup.html', error = False)
 
         # Check if username already exists
         if db.session.query(db.exists().where(Person.username == new_username)).scalar():
             return render_template('signup.html', duplicate = True)
 
-        user = Person(new_username,new_email,new_address,new_age,new_job,new_password)
+        user = Person(new_fullname, new_username, new_address, new_age, new_salary, new_job_title, new_password)
         db.session.add(user)
         db.session.commit()
 
@@ -115,12 +116,13 @@ def home():
     
     return render_template('index.html', 
                             headings = Person.__table__.columns.keys(), 
-                            people = Person.query.all())
+                            people   = Person.query.all())
 
 
 ###############################################
 ## General
 if __name__ == "__main__":
+    # db.create_all()
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(debug=True, host='0.0.0.0')
