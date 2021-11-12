@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select, exists
 from sqlalchemy.sql.expression import false, true
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 import sqlalchemy as db
 
@@ -28,7 +30,9 @@ class Person(db.Model):
     salary       = db.Column(db.Integer)
     job_title    = db.Column(db.String(200), nullable = False)
     password     = db.Column(db.String(200),nullable = False)
-    date_created = db.Column(db.DateTime, default = datetime.utcnow)    
+    date_created = db.Column(db.DateTime, default = datetime.utcnow)  
+   
+
 
     def __init__(self,fullname,username,address,age,salary,job_title,password):
         self.fullname   = fullname
