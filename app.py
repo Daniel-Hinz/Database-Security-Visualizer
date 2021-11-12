@@ -30,10 +30,23 @@ class Person(db.Model):
     salary       = db.Column(db.Integer)
     job_title    = db.Column(db.String(200), nullable = False)
     password     = db.Column(db.String(200),nullable = False)
-    date_created = db.Column(db.DateTime, default = datetime.utcnow)  
-   
+    date_created = db.Column(db.DateTime, default = datetime.utcnow)   
 
+    #Throw exception if the password is not readable
+    @property
+    def password(self):
+        raise AttributeError('Not a readable password!')
 
+    #Hashes and salts user inputted password
+    @password.setter
+    def password(self,password):
+        self.password = generate_password_hash(password)
+ 
+    #verifies hashed password
+    def verify_pass(self,password):
+        return check_password_hash(self.password,password)
+
+    
     def __init__(self,fullname,username,address,age,salary,job_title,password):
         self.fullname   = fullname
         self.username   = username
@@ -42,7 +55,7 @@ class Person(db.Model):
         self.salary     = salary
         self.job_title  = job_title
         self.password   = password
-            
+          
     # Function to return string when new data is added
     def __repr__(self):
         return '<name %r>' % self.id  
