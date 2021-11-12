@@ -55,11 +55,12 @@
         {% for person in people %}
           <tr>
               <td>{{ person.id }}</td>
+              <td>{{ person.fullname }}</td>
               <td>{{ person.username }}</td>
-              <td>{{ person.email }}</td>
               <td>{{ person.address }}</td>
               <td>{{ person.age }}</td>
-              <td>{{ person.job }}</td>
+              <td>{{ person.salary }}</td>
+              <td>{{ person.job_title }}</td>
               <td>{{ person.password }}</td>
               <td>{{ person.date_created }}</td>
           <tr>

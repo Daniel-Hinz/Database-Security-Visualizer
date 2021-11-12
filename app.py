@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session, app
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import select, exists
+
+from sqlalchemy import Text
+from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import false, true
 from datetime import datetime
 
@@ -21,13 +23,13 @@ Session(app)
 
 class Person(db.Model):
     id           = db.Column(db.Integer, primary_key = True)
-    fullname     = db.Column(db.String(200), nullable = False)
-    username     = db.Column(db.String(200), nullable = False)
-    address      = db.Column(db.String(200), nullable = False)
-    age          = db.Column(db.Integer)
-    salary       = db.Column(db.Integer)
-    job_title    = db.Column(db.String(200), nullable = False)
-    password     = db.Column(db.String(200),nullable = False)
+    fullname     = db.Column(db.String(200), nullable = True)
+    username     = deferred(db.Column(db.String(200)))
+    address      = db.Column(db.String(200), nullable = True)
+    age          = db.Column(db.Integer, nullable = True)
+    salary       = db.Column(db.Integer, nullable = True)
+    job_title    = db.Column(db.String(200), nullable = True)
+    password     = deferred(db.Column(db.String(200)))
     date_created = db.Column(db.DateTime, default = datetime.utcnow)    
 
     def __init__(self,fullname,username,address,age,salary,job_title,password):
@@ -113,7 +115,25 @@ def signout():
 def home():
     if not session.get("name"):
         return redirect(url_for("login"))
+
+    ###############################################
+    ## Implement l-diversity 
+    for person in Person.query.all():
+        ## Hide username and password column
+
+        ## Update name column
+        person.name = '*'
+
+        ## Limit address
+
+        ## Update ages
+
+        ## Update salary
+
+        ## Update element
+        db.session.commit()
     
+    ## Return Updated Table
     return render_template('index.html', 
                             headings = Person.__table__.columns.keys(), 
                             people   = Person.query.all())
@@ -122,7 +142,7 @@ def home():
 ###############################################
 ## General
 if __name__ == "__main__":
-    # db.create_all()
+    db.create_all()
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(debug=True, host='0.0.0.0')
