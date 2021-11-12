@@ -118,11 +118,10 @@ def home():
 
     ###############################################
     ## Implement l-diversity 
-    for person in Person.query.all():
+    
         ## Hide username and password column
 
         ## Update name column
-        person.name = '*'
 
         ## Limit address
 
@@ -131,7 +130,7 @@ def home():
         ## Update salary
 
         ## Update element
-        db.session.commit()
+        # db.session.commit()
     
     ## Return Updated Table
     return render_template('index.html', 
