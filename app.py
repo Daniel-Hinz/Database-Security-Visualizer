@@ -2,8 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session, a
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import Text
-from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import false, true
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -41,7 +39,7 @@ class Person(db.Model):
         self.age        = "> 45" if int(age) > 45 else "<= 45"
         self.salary     = str(math.floor(int(salary) / 10000) * 10000) + " - " + str((math.floor(int(salary) / 10000) + 1) * 10000)
         self.job_title  = job_title
-        self.password   = generate_password_hash(password)
+        self.password   = generate_password_hash(password, method='pbkdf2:sha256', salt_length=16)
             
     # Function to return string when new data is added
     def __repr__(self):
@@ -54,20 +52,17 @@ class Person(db.Model):
 def login():
     if request.method == 'POST':
         
-        session["name"] = request.form.get("username")
-
         username = request.form['username']
         password = request.form['password']
 
-        exists = false
-        if (db.session.query(db.exists().where(Person.username == username)).scalar() and 
-            db.session.query(db.exists().where(Person.password == password)).scalar()):
-            exists = true 
+        user = Person.query.filter_by(username = username).first()
 
-        if exists == true:
-            return redirect(url_for('home'))
-        else:
+        if not user:
             return render_template('login.html', loginFailed = true)
+
+        if check_password_hash(user.password, password):
+            session["name"] = request.form.get("username")
+            return redirect(url_for('home'))
         
     return render_template('login.html')
 
