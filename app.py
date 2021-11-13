@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Text
 from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import false, true
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 import sqlalchemy as db
@@ -40,7 +41,7 @@ class Person(db.Model):
         self.age        = "> 45" if int(age) > 45 else "<= 45"
         self.salary     = str(math.floor(int(salary) / 10000) * 10000) + " - " + str((math.floor(int(salary) / 10000) + 1) * 10000)
         self.job_title  = job_title
-        self.password   = password
+        self.password   = generate_password_hash(password)
             
     # Function to return string when new data is added
     def __repr__(self):
