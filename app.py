@@ -1,13 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, app
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-
-from sqlalchemy.sql.expression import false, true
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from sqlalchemy.orm import defer, deferred
 
 import sqlalchemy as db
-import math, re
+import re
 
 app = Flask(__name__)
 
@@ -30,16 +28,15 @@ class Person(db.Model):
     salary       = db.Column(db.String(200), nullable = True)
     job_title    = db.Column(db.String(200), nullable = True)
     password     = db.Column(db.String(200), nullable = True)
-    date_created = db.Column(db.DateTime, default = datetime.utcnow)    
 
     def __init__(self,fullname,username,address,age,salary,job_title,password):
-        self.fullname   = "*"
+        self.fullname   = fullname
         self.username   = username
-        self.address    = address[len(address)-6:len(address)-2]
-        self.age        = "> 45" if int(age) > 45 else "<= 45"
-        self.salary     = str(math.floor(int(salary) / 10000) * 10000) + " - " + str((math.floor(int(salary) / 10000) + 1) * 10000)
+        self.address    = address
+        self.age        = age
+        self.salary     = salary
         self.job_title  = job_title
-        self.password   = generate_password_hash(password, method='pbkdf2:sha256', salt_length=16)
+        self.password   = password
             
     # Function to return string when new data is added
     def __repr__(self):
@@ -58,11 +55,13 @@ def login():
         user = Person.query.filter_by(username = username).first()
 
         if not user:
-            return render_template('login.html', loginFailed = true)
+            return render_template('login.html', loginFailed = True)
 
-        if check_password_hash(user.password, password):
+        if check_password_hash(user.password, password) or user.password == password:
             session["name"] = request.form.get("username")
             return redirect(url_for('home'))
+         
+        return render_template('login.html', loginFailed = True)
         
     return render_template('login.html')
 
@@ -100,6 +99,71 @@ def signup():
 
 
 ###############################################
+## Default Route
+@app.route("/")
+def home():
+    if not session.get("name"):
+        return redirect(url_for("login"))
+    
+    return render_template('index.html', 
+                            headings   = Person.__table__.columns.keys(), 
+                            people     = Person.query.all())
+
+
+###############################################
+## Populate Database
+@app.route("/populate")
+def populate():
+    with open('dummy.txt', 'r') as file:
+        for line in file:
+            values = re.split(r'\t+', line.rstrip('\t'))
+            values[6] = values[6][:len(values[6])-1]
+            
+            if not db.session.query(db.exists().where(Person.username == values[1])).scalar():
+                user = Person(values[0], values[1], values[2], values[3], values[4], values[5], values[6])
+                db.session.add(user)
+        
+        db.session.commit() 
+
+    return redirect(url_for('home')) 
+
+
+###############################################
+## Hash Password
+@app.route("/hash")
+def hash():
+    for person in Person.query.all():
+        person.password = generate_password_hash(person.password, method='pbkdf2:sha256', salt_length=16)
+
+    db.session.commit()
+
+    return redirect(url_for('home')) 
+
+
+###############################################
+## Anonymize
+@app.route("/anonymize", methods = ['GET', 'POST'])
+def anonymize():
+    for person in Person.query.all():
+        # Replace all names with *
+        person.fullname = "*"
+
+        # Limit address to the first 3 digits of the zip
+        person.address = person.address[len(person.address)-6:len(person.address)-2] 
+
+        # Make the ages in the range under 45 – 45 and over
+        person.age = "> 45" if int(person.age) > 45 else "<= 45"
+
+        # Make the salary in the range  < 45k – > 45k 
+        person.salary = "> 45k" if int(person.salary) > 45000 else "<= 45k"
+    
+    db.session.commit()
+
+    people = db.session.query(Person)
+    return redirect(url_for('home'))    
+
+
+###############################################
 ## Signout Route
 @app.route("/signout", methods = ['GET', 'POST'])
 def signout():
@@ -108,35 +172,9 @@ def signout():
 
 
 ###############################################
-## Default Route
-@app.route("/")
-def home():
-    if not session.get("name"):
-        return redirect(url_for("login"))
-    
-    return render_template('index.html', 
-                            headings = Person.__table__.columns.keys(), 
-                            people   = Person.query.all())
-
-
-###############################################
-## Populate Database
-def populate():
-    with open('dummy.txt', 'r') as file:
-        for line in file:
-            values = re.split(r'\t+', line.rstrip('\t'))
-            values[6] = values[6][:len(values[6])-1]
-            user = Person(values[0], values[1], values[2], values[3], values[4], values[5], values[6])
-            db.session.add(user)
-        
-        db.session.commit()            
-
-
-###############################################
 ## General
 if __name__ == "__main__":
-    # db.create_all()
-    # populate()
+    db.create_all()
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(debug=True, host='0.0.0.0')

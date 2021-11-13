@@ -46,4 +46,4 @@ Isla Hemsworth	Iorth1		50 50th Street Akron Ohio 18251		    45	 55701 	    Engin
 Elsa Channels	Enels16		48 48th Street Cincinnati Ohio 18256	43	 28798 	    Cashier		    Password1281
 Claire Ortiz	Crtiz438	693 93th Street Cleveland Ohio 55185	58	 27048 	    Floor Lead  	Password1282
 Kendra Perry	Kerry34		45 45th Street Columbus Ohio 18259	    40	 32225 	    Shift Lead  	Password1283
-Dani McNeedy	Deedy1		2 2nd Street Akron Ohio 55125		    33	 46814 	Truck Driver	Password1291
+Dani McNeedy	Deedy1		2 2nd Street Akron Ohio 55125		    33	 46814 	    Truck Driver	Password1291
