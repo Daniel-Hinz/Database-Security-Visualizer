@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session, a
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.orm import defer, deferred
 
 import sqlalchemy as db
 import re
@@ -18,7 +17,6 @@ Session(app)
 
 ###############################################
 ## Database Initialization
-
 class Person(db.Model):
     id           = db.Column(db.Integer,  primary_key = True)
     fullname     = db.Column(db.String(200), nullable = True)
@@ -158,9 +156,17 @@ def anonymize():
         person.salary = "> 45k" if int(person.salary) > 45000 else "<= 45k"
     
     db.session.commit()
-
-    people = db.session.query(Person)
     return redirect(url_for('home'))    
+
+
+###############################################
+## Reset Table
+@app.route("/reset")
+def reset():
+    Person.__table__.drop(db.engine)
+    db.create_all()
+    session.clear()
+    return redirect(url_for("home"))
 
 
 ###############################################

@@ -15,19 +15,22 @@
 }
 
 body {
+    height: 100vh;
+    width: 100vw;
+}
+
+.body {
+    height: calc(100vh - 65px);
+    width: 100%;
     display: flex; 
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
 }
 
 nav {
     background: var(--black-1);
     height: 60px;
-    position: absolute;
-    top: 0;
     width: 100%;
     border-bottom: 5px solid var(--blue-2);
     display: flex;
@@ -52,7 +55,7 @@ nav ul li {
     align-items: center;
     cursor: pointer;
     position: absolute;
-    top: 50%;
+    top: 30px;
     right: 30px;
     transform: translateY(-50%);
 }
@@ -66,9 +69,10 @@ nav ul li {
 }
 
 .links {
-    height: 100%;
+    height: 100vh;
     width: 350px;
     position: absolute;
+    top: 0;
     right: -350px;
     transition: .2s;
     background: var(--white-1);

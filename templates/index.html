@@ -42,29 +42,32 @@
       <div class="link"><a href="/populate">Populate</a></div>
       <div class="link"><a href="/hash">Hash and Salt</a></div>
       <div class="link"><a href="/anonymize">Anonymize</a></div>
+      <div class="link"><a href="/reset">Reset Table</a></div>
       <div class="link"><a href="/signout">Sign Out</a></div>
     </div>
 
-    <table>
-      <tr>
-        {% for header in headings %} 
-          <th>{{ header }}</th>          
-        {% endfor %}
-      </tr>
+    <div class="body">
+      <table>
+        <tr>
+          {% for header in headings %} 
+            <th>{{ header }}</th>          
+          {% endfor %}
+        </tr>
 
-      {% for person in people %}
-        <tr>
-            <td>{{ person.id }}</td>
-            <td>{{ person.fullname }}</td>
-            <td>{{ person.username }}</td>
-            <td>{{ person.address }}</td>
-            <td>{{ person.age }}</td>
-            <td>{{ person.salary }}</td>
-            <td>{{ person.job_title }}</td>
-            <td>{{ person.password }}</td>
-        <tr>
-      {% endfor %}
-    </table>
+        {% for person in people %}
+          <tr>
+              <td>{{ person.id }}</td>
+              <td>{{ person.fullname }}</td>
+              <td>{{ person.username }}</td>
+              <td>{{ person.address }}</td>
+              <td>{{ person.age }}</td>
+              <td>{{ person.salary }}</td>
+              <td>{{ person.job_title }}</td>
+              <td>{{ person.password }}</td>
+          <tr>
+        {% endfor %}
+      </table>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="../static/scripts/index.js"></script>
