@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, app
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import defer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import sqlalchemy as db
@@ -42,29 +43,6 @@ class Person(db.Model):
 
 
 ###############################################
-## Login Route
-@app.route("/login", methods = ['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        
-        username = request.form['username']
-        password = request.form['password']
-
-        user = Person.query.filter_by(username = username).first()
-
-        if not user:
-            return render_template('login.html', loginFailed = True)
-
-        if check_password_hash(user.password, password) or user.password == password:
-            session["name"] = request.form.get("username")
-            return redirect(url_for('home'))
-         
-        return render_template('login.html', loginFailed = True)
-        
-    return render_template('login.html')
-
-
-###############################################
 ## Signup Route
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
@@ -97,15 +75,37 @@ def signup():
 
 
 ###############################################
+## Login Route
+@app.route("/login", methods = ['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        
+        username = request.form['username']
+        password = request.form['password']
+
+        user = Person.query.filter_by(username = username).first()
+
+        if not user:
+            return render_template('login.html', loginFailed = True)
+
+        # if user.password == password:
+        if check_password_hash(user.password, password):
+            session["name"] = request.form.get("username")
+            return redirect(url_for('home'))
+         
+        return render_template('login.html', loginFailed = True)
+        
+    return render_template('login.html')
+
+
+###############################################
 ## Default Route
 @app.route("/")
 def home():
     if not session.get("name"):
         return redirect(url_for("login"))
     
-    return render_template('index.html', 
-                            headings   = Person.__table__.columns.keys(), 
-                            people     = Person.query.all())
+    return render_template('index.html', headings = Person.__table__.columns.keys(), people = Person.query.all())
 
 
 ###############################################
@@ -123,7 +123,7 @@ def populate():
         
         db.session.commit() 
 
-    return redirect(url_for('home')) 
+    return render_template('index.html', headings = Person.__table__.columns.keys(), people = Person.query.all())
 
 
 ###############################################
@@ -134,8 +134,7 @@ def hash():
         person.password = generate_password_hash(person.password, method='pbkdf2:sha256', salt_length=16)
 
     db.session.commit()
-
-    return redirect(url_for('home')) 
+    return render_template('index.html', headings = Person.__table__.columns.keys(), people = Person.query.all())
 
 
 ###############################################
@@ -143,21 +142,25 @@ def hash():
 @app.route("/anonymize", methods = ['GET', 'POST'])
 def anonymize():
     for person in Person.query.all():
-        # Replace all names with *
+
+        # Hide username and password
+        defer(Person.username)
+        defer(Person.password)
+
+        # Replace all names with "*"
         person.fullname = "*"
 
         # Limit address to the first 3 digits of the zip
         person.address = person.address[len(person.address)-6:len(person.address)-2] 
 
-        # Make the ages in the range under 45 – 45 and over
+        # Make the ages either > 45 or <= 45
         person.age = "> 45" if int(person.age) > 45 else "<= 45"
 
-        # Make the salary in the range  < 45k – > 45k 
+        # Make the salary either > 45k or <= 45k 
         person.salary = "> 45k" if int(person.salary) > 45000 else "<= 45k"
     
     db.session.commit()
-    return redirect(url_for('home'))    
-
+    return render_template('index.html', headings = Person.__table__.columns.keys(), people = Person.query.with_entities(Person.id, Person.fullname, Person.address, Person.age, Person.salary, Person.job_title))
 
 ###############################################
 ## Reset Table
@@ -166,7 +169,7 @@ def reset():
     Person.__table__.drop(db.engine)
     db.create_all()
     session.clear()
-    return redirect(url_for("home"))
+    return redirect(url_for("login"))
 
 
 ###############################################
