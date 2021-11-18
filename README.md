@@ -14,15 +14,7 @@ Hashing and salting is a method used in software development to protect user dat
 If the user selects the "Hash and Salt" attribute, they will have to go to server.py and in the login route comment out line 90 and uncomment line 91, as the hashed value of a password does not equal the original password.
 
 ### Anonymization 
-Anonymization is another method used in software development to protect user data. When anonymizing data, the developer is essentially making reducing the granularity of a value. For example, in our project, when the user selects "Anonymize" the application is then directed to the "/anonymize" route where the username and password values are hidden from the viewer, the fullname is replaced by a "*", the address is replaced by the first three characters of their zip code, the age is replaced by either <= 45 or > 45, and the salary is replaced by either <= 45k or > 45K. 
-
-So instead of being able to view:
-User ID:  Fullname:     Username:   Address:                      Age:  Salary: Job Title:  Password:
-1         Daniel Hinz   dhinz1      123 Main St. Kent OH, 44240   22    50k     Developer   123 
-
-The user sees:
-User ID:  Fullname:   Username:   Address:  Age:    Salary:   Job Title:  Password:
-1         "*"                     442       <= 45   > 45k     Developer    
+Anonymization is another method used in software development to protect user data. When anonymizing data, the developer is essentially making reducing the granularity of a value. For example, in our project, when the user selects "Anonymize" the application is then directed to the "/anonymize" route where the username and password values are hidden from the viewer, the fullname is replaced by an asterisk, the address is replaced by the first three characters of their zip code, the age is replaced by either <= 45 or > 45, and the salary is replaced by either <= 45k or > 45K. 
 
 ### Conclusion
 The result of this is a fully protected database that can provide the company with a great sense of security. Should a hacker or someone who should not have access to this database gain access, the data is protected and the users information is secure.
