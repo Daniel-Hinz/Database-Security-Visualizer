@@ -8,7 +8,6 @@ import sqlalchemy as db
 import re
 
 app = Flask(__name__)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -88,8 +87,8 @@ def login():
         if not user:
             return render_template('login.html', loginFailed = True)
 
-        # if user.password == password:
-        if check_password_hash(user.password, password):
+        if user.password == password:
+        # if check_password_hash(user.password, password):
             session["name"] = request.form.get("username")
             return redirect(url_for('home'))
          
@@ -144,8 +143,8 @@ def anonymize():
     for person in Person.query.all():
 
         # Hide username and password
-        defer(Person.username)
-        defer(Person.password)
+        defer(person.username)
+        defer(person.password)
 
         # Replace all names with "*"
         person.fullname = "*"
@@ -157,7 +156,7 @@ def anonymize():
         person.age = "> 45" if int(person.age) > 45 else "<= 45"
 
         # Make the salary either > 45k or <= 45k 
-        person.salary = "> 45k" if int(person.salary) > 45000 else "<= 45k"
+        person.salary = "> 45" if int(person.salary) > 45000 else "<= 45"
     
     db.session.commit()
     return render_template('index.html', headings = Person.__table__.columns.keys(), people = Person.query.with_entities(Person.id, Person.fullname, Person.address, Person.age, Person.salary, Person.job_title))
