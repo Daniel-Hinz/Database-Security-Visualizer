@@ -1,17 +1,10 @@
-<html lang="en">
-  <head>
-    <title>Database Security Model</title>
+{% extends "root.html" %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
+{% block css %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/login.css') }}">
+{% endblock %}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/root.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/login.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&amp;display=swap" rel="stylesheet">
-  </head>
-
-  <body>
+{% block content %}
     <nav>
       <ul>
         <li>Database Security Model</li>
@@ -36,8 +29,4 @@
     </form>
 
     <p>Don't have an account? <a href="/signup">Sign Up</a></p> 
-
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script src="../static/scripts/login.js"></script>
-  </body>
-</html>
+{% endblock %}
